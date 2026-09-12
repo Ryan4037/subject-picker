@@ -22,6 +22,8 @@ import time
 import json
 
 """########## Definitions ##########"""
+
+
 # Defining a class so that I can create objects for each subject and store all the information about each subject in one place and in one line (reducing the read complexity).
 class Subject():
     def __init__(self, name, current_grade, target_grade, subject_difficulty, last_revised_subject, revision_platforms, topics, topic_difficulties, last_revised_topic):
@@ -49,19 +51,11 @@ def get_scores(subject):
         scores_dict[topic] = topic_score
         topic_to_subject[topic] = subject
 
-# Defining all Subjects
-maths = Subject("Maths", 8, 9, 2, 0.0, "Sparx Maths: https://maths.sparx-learning.com", None, None, None)
-comp_sci = Subject("Computer Science", 8, 9, 3, None, ["Microsoft Teams", "Anki", "revise2"], ["Algorithms", "Programming", "Data Representation", "Computer Systems", "Cyber Security", "SQL", "Ethics"], [3, 4, 2, 2, 3, 2, 4], [0.0] * 7)
-physics = Subject("Physics", 9, 9, 1, None, ["PMT: https://www.physicsandmathstutor.com/physics-revision/gcse-aqa/", "PMT Practical: https://www.physicsandmathstutor.com/physics-revision/gcse-aqa/practical-skills/"], ["Energy", "Electricity", "Particle Model", "Atomic Structure", "Forces", "Waves", "Magnetism"], [1, 1, 1, 2, 1, 2, 2], [0.0] * 7)
-chemistry = Subject("Chemistry", 8, 9, 4, None, ["PMT: https://www.physicsandmathstutor.com/chemistry-revision/gcse-aqa/", "PMT Practical: https://www.physicsandmathstutor.com/chemistry-revision/gcse-aqa/practical-skills/"], ["Atomic Structure", "Bonding", "Stoichiometry", "Reactions", "Energy Changes", "Rates of Reaction", "Equilibrium"], [2, 3, 3, 2, 2, 2, 3], [0.0] * 7)
-biology = Subject("Biology", 8, 9, 8, None, ["PMT: https://www.physicsandmathstutor.com/biology-revision/gcse-aqa/", "PMT Practical: https://www.physicsandmathstutor.com/biology-revision/gcse-aqa/practical-skills/"], ["Cell Biology", "Organisation", "Infection and Response", "Bioenergetics", "Homeostasis", "Inheritance", "Variation and Evolution"], [7, 8, 8, 8, 8, 8, 8], [0.0] * 7)
-french = Subject("French", 8, 9, 5, None, ["For Vocab: ***Anki***", "Anything Else - Languagenut: https://www.languagenut.com/resources/", "Miscellaneous - BBC Bitesize: https://www.bbc.co.uk/bitesize/examspecs/zf2hfg8"], ["Vocabulary", "Grammar", "Speaking", "Listening", "Reading", "Writing"], [5, 5, 5, 5, 5, 5], [0.0] * 6)
-history = Subject("History", 5, 7, 9, None, ["Padlet: https://padlet.com/jmurray165/gcse-history-derby-moor-ai4oohu5z5qjqqvx", "revise2: https://www.revise2.com/", "Seneca: https://app.senecalearning.com/"], ["Weimar Republic", "Nazi Germany", "American West", "Norman England", "Medieval Monarchs"], [9, 9, 9, 9, 9], [0.0] * 5)
-eng_lit = Subject("English Literature", 8, 9, 7, None, ["C:\\Users\\Owner\\.vscode\\Workspace\\In Progress\\Revision\\eng_lit.html"], ["Paper 1: Macbeth", "Paper 1: A Christmas Carol", "Paper 2: An Inspector Calls", "Paper 2: Anthology Poetry", "Unseen Poetry"], [7, 7, 7, 7, 7], [0.0] * 5)
-eng_lang = Subject("English Language", 9, 9, 6, None, ["BBC Bitesize: https://www.bbc.co.uk/bitesize/examspecs/zcbchv4", "Youtube - Mr. Salles: https://www.youtube.com/@MrSallesTeachesEnglish"], ["Paper 1 Writing", "Paper 1 Reading", "Paper 2 Writing", "Paper 2 Transactional Writing", "Grammar and Vocabulary"], [6, 6, 6, 6, 6], [0.0] * 5)
+
 
 
 """########## Main code ##########"""
+
 # Load the payload from payload.json
 with open('payload.json', 'r') as f:
     payload = json.load(f)
@@ -99,8 +93,6 @@ if isinstance(chosen_one, Subject): # If chosen_one is a subject
 else:
     print(f"Subject: {topic_to_subject[chosen_one].name}\nTopic: {chosen_one}\nLast Revised: {topic_to_subject[chosen_one].last_revised_topic[chosen_one]}\nDifficulty Level: {topic_to_subject[chosen_one].topic_difficulties[chosen_one]}\nRevision Platforms: {topic_to_subject[chosen_one].revision_platforms}")
     payload.update({topic_to_subject[chosen_one].name: {chosen_one: time.time()}})
-
-print(f"\nUpdated Payload: {payload}")
 
 # Write the updated payload back to payload.json
 with open('payload.json', 'w') as f:
