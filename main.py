@@ -20,6 +20,7 @@ Outputs:
 
 import time
 import json
+import streamlit as st
 
 """########## Definitions ##########"""
 
@@ -50,7 +51,6 @@ def get_scores(subject):
         topic_score = ((time.time() - subject.last_revised_topic[topic]) ** 2) + subject.topic_difficulties[topic] + (2 * (subject.current_grade - subject.target_grade))
         scores_dict[topic] = topic_score
         topic_to_subject[topic] = subject
-
 
 
 
@@ -88,10 +88,10 @@ chosen_one = max(scores, key=lambda x: scores_dict[x])
 
 # Displaying the subject with the highest score and accompanying information. Also displaying updated payload
 if isinstance(chosen_one, Subject): # If chosen_one is a subject
-    print(f"Subject: {chosen_one.name}\nLast Revised: {chosen_one.last_revised_subject}\nDifficulty Level: {chosen_one.subject_difficulty}\nRevision Platforms: {chosen_one.revision_platforms}")
+    st.write(f"Subject: {chosen_one.name}\nLast Revised: {chosen_one.last_revised_subject}\nDifficulty Level: {chosen_one.subject_difficulty}\nRevision Platforms: {chosen_one.revision_platforms}")
     payload.update({chosen_one.name: time.time()})
 else:
-    print(f"Subject: {topic_to_subject[chosen_one].name}\nTopic: {chosen_one}\nLast Revised: {topic_to_subject[chosen_one].last_revised_topic[chosen_one]}\nDifficulty Level: {topic_to_subject[chosen_one].topic_difficulties[chosen_one]}\nRevision Platforms: {topic_to_subject[chosen_one].revision_platforms}")
+    st.write(f"Subject: {topic_to_subject[chosen_one].name}\nTopic: {chosen_one}\nLast Revised: {topic_to_subject[chosen_one].last_revised_topic[chosen_one]}\nDifficulty Level: {topic_to_subject[chosen_one].topic_difficulties[chosen_one]}\nRevision Platforms: {topic_to_subject[chosen_one].revision_platforms}")
     payload.update({topic_to_subject[chosen_one].name: {chosen_one: time.time()}})
 
 # Write the updated payload back to payload.json
