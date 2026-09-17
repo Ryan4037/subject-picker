@@ -1,1 +1,72 @@
-{"Maths": 1785283200.0, "Computer Science": {"Algorithms": 1785110400.0, "Programming": 1785715200.0, "Data Representation": 1772323200.0, "Computer Systems": 1780444800.0, "Cyber Security": 1780617600.0, "SQL": 1785110400.0, "Ethics": 1780617600.0}, "Physics": {"Energy": 1779235200.0, "Electricity": 1779235200.0, "Particle Model of Matter": 1779235200.0, "Atomic Structure": 1779235200.0, "Forces": 1780272000.0, "Waves": 1785110400.0, "Magnetism and Electromagnetism": 1785110400.0, "Space Physics": 1785110400.0}, "Chemistry": {"Atomic Structure": 1779321600.0, "Bonding": 1779321600.0, "Quantitative Chemistry": 1779321600.0, "Chemical Changes": 1779321600.0, "Energy Changes": 1779321600.0, "The Rate and Extent of Chemical Change": 1778630400.0, "Organic Chemistry": 1780358400.0, "Chemical Analysis": 1785110400.0, "Chemistry of the Atmosphere": 1785110400.0, "Using Resources": 1785110400.0}, "Biology": {"Cell Biology": 1779408000.0, "Organisation": 1779408000.0, "Infection and Response": 1779408000.0, "Bioenergetics": 1779408000.0, "Homeostasis": 1780531200.0, "Inheritance, Variation and Evolution": 1785110400.0, "Ecology": 1778716800.0}, "French": {"Module 1": 1785110400.0, "Module 2": 1785110400.0, "Module 3": 1785110400.0, "Module 4": 1780704000.0, "Module 5": 1785110400.0, "Module 6": 1785110400.0, "Module 7": 1785110400.0, "Module 8": 1785110400.0}, "History": {"Paper 1: Medicine": 1777939200.0, "Paper 1: Western Front": 1767225600.0, "Paper 2: Elizabeth": 1780531200.0, "Paper 2: American West": 1785110400.0, "Paper 3: Nazi Germany": 1785110400.0}, "English Literature": {"Paper 1: Macbeth": 1780790400.0, "Paper 1: A Christmas Carol": 1767225600.0, "Paper 2: An Inspector Calls": 1785110400.0, "Paper 2: Power and Conflict Poetry": 1785110400.0}, "English Language": {"Paper 1: Section A": 1785110400.0, "Paper 1: Section B": 1785110400.0, "Paper 2: Section A": 1781308800.0, "Paper 2: Section B": 1780444800.0}}
+{
+  "Maths": 0.0,
+  "Computer Science": {
+    "Algorithms": 0.0,
+    "Programming": 0.0,
+    "Data Representation": 0.0,
+    "Computer Systems": 0.0,
+    "Cyber Security": 0.0,
+    "SQL": 0.0,
+    "Ethics": 0.0
+  },
+  "Physics": {
+    "Energy": 0.0,
+    "Electricity": 0.0,
+    "Particle Model of Matter": 0.0,
+    "Atomic Structure": 0.0,
+    "Forces": 0.0,
+    "Waves": 0.0,
+    "Magnetism and Electromagnetism": 0.0,
+    "Space Physics": 0.0
+  },
+  "Chemistry": {
+    "Atomic Structure": 0.0,
+    "Bonding": 0.0,
+    "Quantitative Chemistry": 0.0,
+    "Chemical Changes": 0.0,
+    "Energy Changes": 0.0,
+    "The Rate and Extent of Chemical Change": 0.0,
+    "Organic Chemistry": 0.0,
+    "Chemical Analysis": 0.0,
+    "Chemistry of the Atmosphere": 0.0,
+    "Using Resources": 0.0
+  },
+  "Biology": {
+    "Cell Biology": 0.0,
+    "Organisation": 0.0,
+    "Infection and Response": 0.0,
+    "Bioenergetics": 0.0,
+    "Homeostasis": 0.0,
+    "Inheritance, Variation and Evolution": 0.0,
+    "Ecology": 0.0
+  },
+  "French": {
+    "Module 1": 0.0,
+    "Module 2": 0.0,
+    "Module 3": 0.0,
+    "Module 4": 0.0,
+    "Module 5": 0.0,
+    "Module 6": 0.0,
+    "Module 7": 0.0,
+    "Module 8": 0.0
+  },
+  "History": {
+    "Paper 1: Medicine": 0.0,
+    "Paper 1: Western Front": 0.0,
+    "Paper 2: Elizabeth": 0.0,
+    "Paper 2: American West": 0.0,
+    "Paper 3: Nazi Germany": 0.0
+  },
+  "English Literature": {
+    "Paper 1: Macbeth": 0.0,
+    "Paper 1: A Christmas Carol": 0.0,
+    "Paper 2: An Inspector Calls": 0.0,
+    "Paper 2: Power and Conflict Poetry": 0.0
+  },
+  "English Language": {
+    "Paper 1: Section A": 0.0,
+    "Paper 1: Section B": 0.0,
+    "Paper 2: Section A": 0.0,
+    "Paper 2: Section B": 0.0
+  }
+}
