@@ -48,7 +48,7 @@ class Subject():
 def get_scores(subject):
     for topic in subject.topics:
         # score = (time since last revised)^2 + difficulty level + 2 * (current grade - target grade)
-        topic_score = ((time.time() - subject.last_revised_topic[topic]) ** 2) + subject.topic_difficulties[topic] + (2 * (subject.current_grade - subject.target_grade))
+        topic_score = ((time.time() - subject.last_revised_topic[topic]) ** 2) + subject.topic_difficulties[topic] + (2 * (subject.target_grade - subject.current_grade))
         scores_dict[topic] = topic_score
         topic_to_subject[topic] = subject
 
@@ -78,7 +78,7 @@ topic_to_subject = {}
 
 # The algorithm will calculate a score for maths and each topic based on the following formula: 
 # score = (time since last revised)^2 + difficulty level + 2 * (current grade - target grade)
-scores_dict[maths] = ((time.time() - maths.last_revised_subject) ** 2) + maths.subject_difficulty + (2 * (maths.current_grade - maths.target_grade))
+scores_dict[maths] = ((time.time() - maths.last_revised_subject) ** 2) + maths.subject_difficulty + (2 * ( maths.target_grade - maths.current_grade))
 for subject in [comp_sci, physics, chemistry, biology, french, history, eng_lit, eng_lang]:
     get_scores(subject)
 
