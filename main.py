@@ -2,7 +2,7 @@
 Subject Picker — Streamlit app
 
 Recommends whichever subject/topic is most in need of revision, based on:
-    score = (time since last revised)^2 + difficulty + 2 * (current grade - target grade)
+    score = (time since last revised)^2 + difficulty + 2 * (target grade- current grade)
 
 Click "I've revised this" once you've actually studied it — that's the only
 thing that updates payload.json. Just viewing the page (or any other widget
@@ -159,7 +159,7 @@ def apply_payload(subjects, payload):
 
 def compute_scores(subjects):
     """
-    score = (time since last revised)^2 + difficulty + 2 * (current grade - target grade)
+    score = (time since last revised)^2 + difficulty + 2 * (target grade - current grade)
 
     Keyed by (subject_name, topic_or_None) rather than raw topic name — several
     topic names repeat across subjects (e.g. "Atomic Structure" is both a
@@ -171,7 +171,7 @@ def compute_scores(subjects):
     scores[("Maths", None)] = (
         (time.time() - maths.last_revised_subject) ** 2
         + maths.subject_difficulty
-        + 2 * (maths.current_grade - maths.target_grade)
+        + 2 * (maths.target_grade - maths.current_grade)
     )
     for name, subj in subjects.items():
         if name == "Maths":
@@ -181,7 +181,7 @@ def compute_scores(subjects):
             score = (
                 (time.time() - last) ** 2
                 + subj.topic_difficulties[topic]
-                + 2 * (subj.current_grade - subj.target_grade)
+                + 2 * (subj.target_grade - subj.current_grade)
             )
             scores[(name, topic)] = score
     return scores
