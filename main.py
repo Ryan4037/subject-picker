@@ -2,20 +2,96 @@
 Subject Picker — Streamlit app
 
 Recommends whichever subject/topic is most in need of revision, based on:
-    score = (time since last revised)^2 + difficulty + 2 * (target grade- current grade)
+    score = (time since last revised)^2 + difficulty + 2 * (current grade - target grade)
 
 Click "I've revised this" once you've actually studied it — that's the only
 thing that updates payload.json. Just viewing the page (or any other widget
 interaction) does NOT mark anything as revised.
 """
 
+import base64
 import json
 import os
 import time
 
+import requests
 import streamlit as st
 
 PAYLOAD_PATH = os.path.join(os.path.dirname(__file__), "payload.json")
+
+
+def get_secret(key, default=None):
+    """st.secrets can raise if no secrets are configured at all (e.g. running
+    locally with no secrets.toml) — fall back to `default` instead of crashing."""
+    try:
+        return st.secrets.get(key, default)
+    except Exception:
+        return default
+
+
+GITHUB_TOKEN = get_secret("GITHUB_TOKEN")
+GITHUB_REPO = get_secret("GITHUB_REPO", "Ryan4037/subject-picker")
+GITHUB_BRANCH = get_secret("GITHUB_BRANCH", "main")
+GITHUB_FILE_PATH = "payload.json"
+
+
+def github_contents_url():
+    return f"https://api.github.com/repos/{GITHUB_REPO}/contents/{GITHUB_FILE_PATH}"
+
+
+def push_payload_to_github(payload):
+    """
+    Commit the updated payload.json back to the GitHub repo, so the data
+    survives a Streamlit Cloud redeploy or sleep/wake cycle (which otherwise
+    resets the local filesystem to whatever's last committed).
+
+    Returns (success: bool, message: str).
+    """
+    if not GITHUB_TOKEN:
+        return False, "No GITHUB_TOKEN found in secrets — saved locally only."
+
+    headers = {
+        "Authorization": f"Bearer {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github+json",
+    }
+
+    # GitHub requires the current file's blob SHA to update it. A 404 means
+    # the file doesn't exist yet on this branch, in which case we create it.
+    sha = None
+    try:
+        get_resp = requests.get(
+            github_contents_url(),
+            headers=headers,
+            params={"ref": GITHUB_BRANCH},
+            timeout=10,
+        )
+    except requests.RequestException as exc:
+        return False, f"Network error contacting GitHub: {exc}"
+
+    if get_resp.status_code == 200:
+        sha = get_resp.json()["sha"]
+    elif get_resp.status_code != 404:
+        return False, f"Couldn't read current file from GitHub ({get_resp.status_code})."
+
+    content_str = json.dumps(payload, indent=2)
+    encoded = base64.b64encode(content_str.encode("utf-8")).decode("utf-8")
+
+    body = {
+        "message": "Update payload.json via Subject Picker app",
+        "content": encoded,
+        "branch": GITHUB_BRANCH,
+    }
+    if sha:
+        body["sha"] = sha
+
+    try:
+        put_resp = requests.put(github_contents_url(), headers=headers, json=body, timeout=10)
+    except requests.RequestException as exc:
+        return False, f"Network error pushing to GitHub: {exc}"
+
+    if put_resp.status_code in (200, 201):
+        return True, "Saved to GitHub."
+    return False, f"GitHub commit failed ({put_resp.status_code}): {put_resp.text[:200]}"
 
 
 class Subject:
@@ -159,7 +235,7 @@ def apply_payload(subjects, payload):
 
 def compute_scores(subjects):
     """
-    score = (time since last revised)^2 + difficulty + 2 * (target grade - current grade)
+    score = (time since last revised)^2 + difficulty + 2 * (current grade - target grade)
 
     Keyed by (subject_name, topic_or_None) rather than raw topic name — several
     topic names repeat across subjects (e.g. "Atomic Structure" is both a
@@ -171,7 +247,7 @@ def compute_scores(subjects):
     scores[("Maths", None)] = (
         (time.time() - maths.last_revised_subject) ** 2
         + maths.subject_difficulty
-        + 2 * (maths.target_grade - maths.current_grade)
+        + 2 * (maths.current_grade - maths.target_grade)
     )
     for name, subj in subjects.items():
         if name == "Maths":
@@ -181,7 +257,7 @@ def compute_scores(subjects):
             score = (
                 (time.time() - last) ** 2
                 + subj.topic_difficulties[topic]
-                + 2 * (subj.target_grade - subj.current_grade)
+                + 2 * (subj.current_grade - subj.target_grade)
             )
             scores[(name, topic)] = score
     return scores
@@ -200,6 +276,15 @@ def fmt_ts(ts):
 st.set_page_config(page_title="Subject Picker", page_icon="📚")
 st.title("📚 Subject Picker")
 st.caption("Picks whatever's most overdue for revision.")
+
+# Show the result of the last save attempt, if there is one. Stored in
+# session_state (rather than shown directly before st.rerun()) because
+# st.rerun() reruns the script immediately — a message shown right before
+# it would never actually render.
+if st.session_state.get("flash"):
+    kind, message = st.session_state.flash
+    getattr(st, kind)(message)
+    st.session_state.flash = None
 
 subjects = build_subjects()
 payload = load_payload()
@@ -223,9 +308,21 @@ if st.button("✅ I've revised this — mark as done"):
     now = time.time()
     if chosen_topic is None:
         payload["Maths"] = now
+        label = chosen_subject.name
     else:
         # setdefault + update merges into the existing per-subject dict instead
         # of replacing it, so other topics' saved times aren't wiped out.
         payload.setdefault(chosen_subject.name, {})[chosen_topic] = now
-    save_payload(payload)
+        label = f"{chosen_subject.name} — {chosen_topic}"
+
+    save_payload(payload)  # local write: instant, always happens
+    ok, msg = push_payload_to_github(payload)  # durable write: survives redeploys/sleep
+
+    if ok:
+        st.session_state.flash = ("success", f"Marked '{label}' as revised — saved to GitHub.")
+    else:
+        st.session_state.flash = (
+            "warning",
+            f"Marked '{label}' as revised locally, but the GitHub save failed: {msg}",
+        )
     st.rerun()
